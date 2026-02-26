@@ -1,0 +1,12 @@
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/bin/Debug/net7.0/Finanzauto.Infrastructure.deps.json
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/bin/Debug/net7.0/Finanzauto.Infrastructure.dll
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/bin/Debug/net7.0/Finanzauto.Infrastructure.pdb
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/Finanzauto.Infrastructure.csproj.AssemblyReference.cache
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/Finanzauto.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/Finanzauto.Infrastructure.AssemblyInfoInputs.cache
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/Finanzauto.Infrastructure.AssemblyInfo.cs
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/Finanzauto.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/Finanzauto.Infrastructure.dll
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/refint/Finanzauto.Infrastructure.dll
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/Finanzauto.Infrastructure.pdb
+/Users/yilberrojas/finanzauto-products-api/Finanzauto.Infrastructure/obj/Debug/net7.0/ref/Finanzauto.Infrastructure.dll

@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "yl0H0fuUZ0ZjqMbyY4RVahs79BonP1G9K7cs+TKquCiEGaiBpXLwUUH9Z0Rpsnwr232k05SsXbBQNool9nHAWw==",
+  "success": true,
+  "projectFilePath": "/Users/yilberrojas/finanzauto-products-api/Finanzauto.Api/Finanzauto.Api.csproj",
+  "expectedPackageFiles": [
+    "/Users/yilberrojas/.nuget/packages/microsoft.aspnetcore.openapi/7.0.20/microsoft.aspnetcore.openapi.7.0.20.nupkg.sha512",
+    "/Users/yilberrojas/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "/Users/yilberrojas/.nuget/packages/microsoft.openapi/1.4.3/microsoft.openapi.1.4.3.nupkg.sha512",
+    "/Users/yilberrojas/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "/Users/yilberrojas/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "/Users/yilberrojas/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.5.0/swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "/Users/yilberrojas/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.5.0/swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
