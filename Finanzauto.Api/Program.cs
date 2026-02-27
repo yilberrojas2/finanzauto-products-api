@@ -8,20 +8,14 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =======================
 // Database
-// =======================
 builder.Services.AddDbContext<FinanzautoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// =======================
 // Dependency Injection
-// =======================
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-// =======================
 // JWT Authentication
-// =======================
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
@@ -46,9 +40,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// =======================
 // Controllers & Swagger
-// =======================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -81,9 +73,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// =======================
 // Middleware
-// =======================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

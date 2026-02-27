@@ -23,20 +23,44 @@ public class ProductController : ControllerBase
         _context = context;
     }
 
-    // 🔥 CARGA MASIVA
     [HttpPost]
-    public async Task<IActionResult> CreateBulk(CreateProductDto dto)
+    public async Task<IActionResult> Create(CreateProductDto dto)
     {
+        var product = new Product(
+            dto.Name,
+            dto.Price,
+            dto.CategoryId
+        );
+
+        await _repository.AddAsync(product);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = product.Id },
+            product.Id
+        );
+    }
+
+    // 🔥 CARGA MASIVA
+    [HttpPost("bulk")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateBulk(CreateProductBulkDto dto)
+    {
+        if (dto.Quantity <= 0 || dto.Quantity > 100_000)
+            return BadRequest("Quantity must be between 1 and 100000");
+
         var category = await _context.Categories.FindAsync(dto.CategoryId);
         if (category == null)
             return BadRequest("Category not found");
 
-        var products = new List<Product>();
+        var products = new List<Product>(dto.Quantity);
 
         for (int i = 0; i < dto.Quantity; i++)
         {
+            var code = Guid.NewGuid().ToString("N")[..8];
+
             products.Add(new Product(
-                $"Product-{Guid.NewGuid().ToString()[..8]}",
+                $"Product-{code}",
                 Random.Shared.Next(100, 5000),
                 category.Id
             ));
@@ -44,7 +68,7 @@ public class ProductController : ControllerBase
 
         await _repository.BulkInsertAsync(products);
 
-        return Ok(new { Created = products.Count });
+        return Ok(new { created = products.Count });
     }
 
     // 📄 LISTADO + PAGINACIÓN + FILTROS
