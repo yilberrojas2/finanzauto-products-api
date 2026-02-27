@@ -1,17 +1,18 @@
-namespace Finanzauto.Domain.Entities;
-
-public class Category
+namespace Finanzauto.Domain.Entities
 {
-    public Guid Id { get; private set; }
-    public string Name { get; private set; } = null!;
-    public string ImageUrl { get; private set; } = null!;
-
-    protected Category() { }
-
-    public Category(string name, string imageUrl)
+    public class Category
     {
-        Id = Guid.NewGuid();
-        Name = name;
-        ImageUrl = imageUrl;
+        public Guid Id { get; private set; }
+        public string Name { get; private set; } = null!;
+        public string ImageUrl { get; private set; } = null!;
+
+        private Category() { }
+
+        public Category(string name, string imageUrl)
+        {
+            Id = Guid.NewGuid();
+            Name = name;
+            ImageUrl = imageUrl;
+        }
     }
 }
