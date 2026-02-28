@@ -1,9 +1,9 @@
 using Finanzauto.Application.DTOs.Product;
+using Finanzauto.Application.Products.CreateProductBulk;
 using Finanzauto.Application.Interfaces.Repositories;
 using Finanzauto.Domain.Entities;
-using Finanzauto.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Finanzauto.Api.Controllers;
 
@@ -13,16 +13,17 @@ namespace Finanzauto.Api.Controllers;
 public class ProductController : ControllerBase
 {
     private readonly IProductRepository _repository;
-    private readonly FinanzautoDbContext _context;
+    private readonly CreateProductBulkService _bulkService;
 
     public ProductController(
         IProductRepository repository,
-        FinanzautoDbContext context)
+        CreateProductBulkService bulkService)
     {
         _repository = repository;
-        _context = context;
+        _bulkService = bulkService;
     }
 
+    // POST /api/Product
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto dto)
     {
@@ -41,37 +42,31 @@ public class ProductController : ControllerBase
         );
     }
 
-    // 🔥 CARGA MASIVA
+    // POST /api/Product/bulk
     [HttpPost("bulk")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateBulk(CreateProductBulkDto dto)
     {
-        if (dto.Quantity <= 0 || dto.Quantity > 100_000)
-            return BadRequest("Quantity must be between 1 and 100000");
-
-        var category = await _context.Categories.FindAsync(dto.CategoryId);
-        if (category == null)
-            return BadRequest("Category not found");
-
-        var products = new List<Product>(dto.Quantity);
-
-        for (int i = 0; i < dto.Quantity; i++)
+        try
         {
-            var code = Guid.NewGuid().ToString("N")[..8];
+            var created = await _bulkService.ExecuteAsync(
+                dto.CategoryId,
+                dto.Quantity
+            );
 
-            products.Add(new Product(
-                $"Product-{code}",
-                Random.Shared.Next(100, 5000),
-                category.Id
-            ));
+            return Ok(new { created });
         }
-
-        await _repository.BulkInsertAsync(products);
-
-        return Ok(new { created = products.Count });
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
-    // 📄 LISTADO + PAGINACIÓN + FILTROS
+    // GET /api/Product
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] ProductQueryDto query)
     {
@@ -98,12 +93,13 @@ public class ProductController : ControllerBase
         });
     }
 
-    // 🔍 DETALLE
+    // GET /api/Product/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var product = await _repository.GetByIdAsync(id);
-        if (product == null) return NotFound();
+        if (product == null)
+            return NotFound();
 
         return Ok(new ProductDto
         {
@@ -115,12 +111,13 @@ public class ProductController : ControllerBase
         });
     }
 
-    // 🗑️ DELETE
+    // DELETE /api/Product/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var product = await _repository.GetByIdAsync(id);
-        if (product == null) return NotFound();
+        if (product == null)
+            return NotFound();
 
         await _repository.DeleteAsync(product);
         return NoContent();

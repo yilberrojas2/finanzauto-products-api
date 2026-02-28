@@ -1,5 +1,6 @@
 using System.Text;
 using Finanzauto.Application.Interfaces.Repositories;
+using Finanzauto.Application.Products.CreateProductBulk;
 using Finanzauto.Infrastructure.Persistence;
 using Finanzauto.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,10 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FinanzautoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Dependency Injection
+// Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-// JWT Authentication
+// Application services (Use Cases)
+builder.Services.AddScoped<CreateProductBulkService>();
+
+// JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
@@ -40,7 +45,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Controllers & Swagger
+// Controllers + Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -73,7 +78,6 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
