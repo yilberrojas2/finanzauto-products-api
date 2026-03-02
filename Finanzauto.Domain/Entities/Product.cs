@@ -23,6 +23,13 @@ namespace Finanzauto.Domain.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
+        public void Update(string name, decimal price, Guid categoryId)
+        {
+            Name = name;
+            Price = price;
+            CategoryId = categoryId;
+        }
+
         public void Deactivate()
         {
             IsActive = false;

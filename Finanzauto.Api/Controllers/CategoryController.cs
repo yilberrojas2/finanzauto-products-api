@@ -1,34 +1,38 @@
 using Finanzauto.Application.DTOs.Category;
+using Finanzauto.Application.Interfaces.Repositories;
 using Finanzauto.Domain.Entities;
-using Finanzauto.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finanzauto.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CategoryController : ControllerBase
 {
-    private readonly FinanzautoDbContext _context;
+    private readonly ICategoryRepository _repository;
 
-    public CategoryController(FinanzautoDbContext context)
+    public CategoryController(ICategoryRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
+    // POST /api/Category
     [HttpPost]
     public async Task<IActionResult> Create(CreateCategoryDto dto)
     {
         var category = new Category(dto.Name, dto.ImageUrl);
+        await _repository.AddAsync(category);
 
-        _context.Categories.Add(category);
-        await _context.SaveChangesAsync();
+        return Ok(category.Id);
+    }
 
-        return Ok(new CategoryDto
-        {
-            Id = category.Id,
-            Name = category.Name,
-            ImageUrl = category.ImageUrl
-        });
+    // GET /api/Category
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        var categories = await _repository.GetAllAsync();
+        return Ok(categories);
     }
 }

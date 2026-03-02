@@ -4,17 +4,18 @@ namespace Finanzauto.Application.Interfaces.Repositories;
 
 public interface IProductRepository
 {
-    Task BulkInsertAsync(IEnumerable<Product> products);
+    Task AddAsync(Product product);
+    Task UpdateAsync(Product product);
+    Task DeleteAsync(Product product);
+
+    Task<Product?> GetByIdAsync(Guid id);
 
     Task<(IEnumerable<Product> Items, int Total)> GetAsync(
         int page,
         int pageSize,
         string? search,
-        Guid? categoryId);
+        Guid? categoryId
+    );
 
-    Task<Product?> GetByIdAsync(Guid id);
-
-    Task AddAsync(Product product);
-
-    Task DeleteAsync(Product product);
+    Task BulkInsertAsync(IEnumerable<Product> products);
 }

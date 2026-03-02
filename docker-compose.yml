@@ -1,44 +1,38 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: finanzauto-postgres
-    environment:
-      POSTGRES_USER: finanzauto_user
-      POSTGRES_PASSWORD: finanzauto_pass
-      POSTGRES_DB: finanzauto_user
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U finanzauto_user"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  api:
+  finanzauto-api:
+    container_name: finanzauto-api
     build:
       context: .
       dockerfile: Finanzauto.Api/Dockerfile
-    container_name: finanzauto-api
-    depends_on:
-      postgres:
-        condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8080:80"
+    depends_on:
+      - postgres
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: >
-        Host=postgres;
-        Port=5432;
-        Database=finanzauto_db;
-        Username=finanzauto_user;
-        Password=finanzauto_pass
-      Jwt__Key: "SUPER_SECRET_KEY_123456789"
-      Jwt__Issuer: "Finanzauto.Api"
-      Jwt__Audience: "Finanzauto.Clients"
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=finanzauto_db;Username=postgres;Password=postgres
+    networks:
+      - finanzauto-network
+
+  postgres:
+    image: postgres:15
+    container_name: finanzauto-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: finanzauto_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - finanzauto-network
 
 volumes:
   postgres_data:
+
+networks:
+  finanzauto-network:

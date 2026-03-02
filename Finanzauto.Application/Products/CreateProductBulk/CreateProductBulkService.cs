@@ -18,26 +18,30 @@ public class CreateProductBulkService
 
     public async Task<int> ExecuteAsync(Guid categoryId, int quantity)
     {
+        // ✅ Validación de negocio
         if (quantity <= 0 || quantity > 100_000)
-            throw new ArgumentException("Quantity must be between 1 and 100000");
+            throw new ArgumentException("La cantidad debe estar entre 1 y 100.000");
 
+        // ✅ Verificar existencia de la categoría
         var category = await _categoryRepository.GetByIdAsync(categoryId);
         if (category == null)
-            throw new InvalidOperationException("Category not found");
+            throw new InvalidOperationException("La categoría no existe");
 
-        var products = new List<Product>(quantity);
+        // ✅ Preparar lista con capacidad definida (performance)
+        var products = new List<Product>(capacity: quantity);
 
         for (int i = 0; i < quantity; i++)
         {
             var code = Guid.NewGuid().ToString("N")[..8];
 
             products.Add(new Product(
-                $"Product-{code}",
-                Random.Shared.Next(100, 5000),
-                category.Id
+                name: $"Product-{code}",
+                price: Random.Shared.Next(100, 5_000),
+                categoryId: category.Id
             ));
         }
 
+        // ✅ Inserción masiva
         await _productRepository.BulkInsertAsync(products);
 
         return products.Count;
