@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import api from "../../api/axios";
 
 interface Category {
@@ -19,7 +20,6 @@ export default function ProductForm() {
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Cargar categorías y producto (si es edición)
   useEffect(() => {
     api.get("/Category").then((res) => setCategories(res.data));
 
@@ -34,11 +34,9 @@ export default function ProductForm() {
 
   const validate = () => {
     const errs: string[] = [];
-
     if (!name.trim()) errs.push("El nombre es obligatorio");
     if (price <= 0) errs.push("El precio debe ser mayor a 0");
     if (!categoryId) errs.push("Debe seleccionar una categoría");
-
     setErrors(errs);
     return errs.length === 0;
   };
@@ -51,11 +49,7 @@ export default function ProductForm() {
 
     setLoading(true);
 
-    const payload = {
-      name,
-      price,
-      categoryId,
-    };
+    const payload = { name, price, categoryId };
 
     try {
       isEdit
@@ -64,62 +58,109 @@ export default function ProductForm() {
 
       navigate("/products");
     } catch {
-      setErrors(["Error guardando el producto"]);
+      setErrors(["Ocurrió un error guardando el producto"]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 500, margin: "40px auto" }}>
-      <h2>{isEdit ? "✏ Editar producto" : "➕ Crear producto"}</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-200 via-white to-emerald-200 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+        className="w-full max-w-xl bg-gray-50 rounded-2xl shadow-xl p-10 border border-emerald-200"
+      >
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
+          {isEdit ? "Editar Producto" : "Crear Producto"}
+        </h2>
 
-      {errors.length > 0 && (
-        <ul style={{ color: "red" }}>
-          {errors.map((e) => (
-            <li key={e}>{e}</li>
-          ))}
-        </ul>
-      )}
+        <p className="text-center text-gray-500 text-sm mb-8">
+          Complete la información del producto
+        </p>
 
-      <form onSubmit={submit}>
-        <div>
-          <label>Nombre</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Precio</label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
-        </div>
-
-        <div>
-          <label>Categoría</label>
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
+        {errors.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm"
           >
-            <option value="">Seleccione una categoría</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
+            {errors.map((e) => (
+              <div key={e}>• {e}</div>
             ))}
-          </select>
-        </div>
+          </motion.div>
+        )}
 
-        <button disabled={loading}>
-          {loading ? "Guardando..." : "Guardar"}
-        </button>
+        <form onSubmit={submit} className="space-y-6">
+          {/* Nombre */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre del producto
+            </label>
+            <input
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
+              placeholder="Ej: Crédito Vehicular"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-        <button type="button" onClick={() => navigate("/products")}>
-          Cancelar
-        </button>
-      </form>
+          {/* Precio */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Precio
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
+              placeholder="Ej: 2500000"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+            />
+          </div>
+
+          {/* Categoría */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Categoría
+            </label>
+            <select
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition bg-white"
+            >
+              <option value="">Seleccione una categoría</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Botones */}
+          <div className="flex justify-between items-center pt-6">
+            <button
+              type="button"
+              onClick={() => navigate("/products")}
+              className="text-gray-500 hover:text-gray-700 transition text-sm"
+            >
+              Cancelar
+            </button>
+
+            <button
+              disabled={loading}
+              className="relative bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-medium shadow-md transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 flex items-center gap-2"
+            >
+              {loading && (
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              )}
+              {loading ? "Guardando..." : "Guardar"}
+            </button>
+          </div>
+        </form>
+      </motion.div>
     </div>
   );
 }

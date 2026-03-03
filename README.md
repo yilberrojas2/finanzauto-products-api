@@ -167,6 +167,7 @@ Header requerido:
 ### Categorías
 
 - `POST /api/Category`
+- `GET /api/Category`
 
 ### Productos
 
@@ -217,7 +218,7 @@ El frontend es una **SPA moderna**, desarrollada con:
 
 ### 1️⃣ Clonar el repositorio
 
-git clone https://github.com/USUARIO/finanzauto-products-api.git
+git clone https://github.com/yilberrojas2/finanzauto-products-api.git
 
 cd finanzauto-products-api
 
@@ -324,4 +325,5 @@ No es solo una prueba funcional, sino una **base sólida de proyecto productivo*
 ### 👤 Autor
 
 **Yilber Rojas Garrido**  
+**WhatsApp o Telefono 3212920942**  
 Prueba Técnica – Full Stack Developer
